@@ -88,4 +88,62 @@
   color: #ffffff;
 }
 
+/* Error */
+.error-text {
+  margin-top: 8px;
+  color: #b00020;
+  font-size: 0.95rem;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100; /* above topbar */
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.modal h3 {
+  margin: 0 0 8px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.modal-button {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: #f2f2f2;
+  color: #000000;
+}
+
+.modal-button.primary {
+  background: #2cbe4b;
+  color: #ffffff;
+}
+
+.modal-button.ghost {
+  background: transparent;
+  border: 1px solid #e5e5e5;
+}
+
 
