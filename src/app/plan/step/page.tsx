@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ChevronLeft, Check, Clock, MapPin, Calendar, Sparkles } from "lucide-react";
+import { ChevronLeft, Check, Clock, MapPin, Calendar, Sparkles, Share2, Edit3 } from "lucide-react";
 import Image from "next/image";
 import {
   fetchMockQuestionnaire,
@@ -27,6 +27,9 @@ function StepPlannerContent() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
   const [totalDays, setTotalDays] = useState(3);
+  const [isReviseMode, setIsReviseMode] = useState(false);
+  const [newPrompt, setNewPrompt] = useState("");
+  const [isSingleQuestionRevision, setIsSingleQuestionRevision] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -39,6 +42,7 @@ function StepPlannerContent() {
   }, [totalDays]);
 
   const isDone = questions ? current >= questions.length : false;
+  const isActuallyDone = isDone && !isSingleQuestionRevision;
   const progress = questions ? (current / questions.length) * 100 : 0;
 
   const getCategoryIcon = useCallback((category?: string) => {
@@ -113,16 +117,73 @@ function StepPlannerContent() {
     });
 
     await new Promise((resolve) => setTimeout(resolve, 300));
-    setCurrent((c) => c + 1);
-    setSelectedOptions([]);
-    setIsAnimating(false);
-  }, [questions, current, isAnimating, selectedOptions]);
+
+    if (isSingleQuestionRevision) {
+      // For single question revision, just update the answer and return to completion
+      setSelectedOptions([]);
+      setIsSingleQuestionRevision(false);
+      setIsAnimating(false);
+      // Set current to the end so the question section closes
+      if (questions) {
+        setCurrent(questions.length);
+      }
+    } else {
+      // Normal flow - continue to next question
+      setCurrent((c) => c + 1);
+      setSelectedOptions([]);
+      setIsAnimating(false);
+    }
+  }, [questions, current, isAnimating, selectedOptions, isSingleQuestionRevision]);
 
   const handlePrevious = useCallback(() => {
     if (current > 0 && !isAnimating) {
       setCurrent((c) => c - 1);
     }
   }, [current, isAnimating]);
+
+  const handleShare = useCallback(async () => {
+    if (!questions || !answers.length) return;
+
+    // Mock share functionality
+    console.log("Sharing plan:", { questions, answers, totalDays });
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // In a real app, this would generate a shareable link or open share dialog
+    alert("Plan shared successfully! (Mock functionality)");
+  }, [questions, answers, totalDays]);
+
+  const handleRevisePlan = useCallback(() => {
+    if (!questions || !answers.length) return;
+
+    setIsReviseMode(true);
+    setNewPrompt(prompt || "");
+  }, [questions, answers.length, prompt]);
+
+  const handleJumpToQuestion = useCallback((questionIndex: number) => {
+    setCurrent(questionIndex);
+    setIsReviseMode(false);
+    setIsSingleQuestionRevision(true);
+    setSelectedOptions([]);
+  }, []);
+
+  const handleNewPromptSubmit = useCallback(async () => {
+    if (!newPrompt.trim()) return;
+
+    // Log the new prompt to console
+    console.log("New prompt submitted:", newPrompt);
+
+    // Just close the revision interface and stay on completion view
+    setIsReviseMode(false);
+    setNewPrompt("");
+
+    alert(`New prompt logged to console: "${newPrompt}"`);
+  }, [newPrompt]);
+
+  const handleCancelRevise = useCallback(() => {
+    setIsReviseMode(false);
+    setNewPrompt("");
+    setIsSingleQuestionRevision(false);
+  }, []);
 
   const renderTimeline = useCallback(() => {
     if (!answers.length || !questions) return null;
@@ -248,12 +309,19 @@ function StepPlannerContent() {
                     return indices.map((answerIndex, subIndex) => (
                       <div
                         key={`${i}-${subIndex}`}
-                        className="absolute p-1.5 rounded-lg border bg-card hover:shadow-md transition-shadow z-10"
+                        className={cn(
+                          "absolute p-1.5 rounded-lg border bg-card transition-shadow z-10",
+                          isReviseMode
+                            ? "cursor-pointer hover:shadow-lg hover:border-primary hover:bg-primary/5"
+                            : "hover:shadow-md"
+                        )}
                         style={{
                           left: `${adjustedLeftPct}%`,
                           width: `${adjustedWidthPct}%`,
                           top: `${subIndex * 68}px`,
                         }}
+                        onClick={isReviseMode ? () => handleJumpToQuestion(i) : undefined}
+                        title={isReviseMode ? "Click to revise this selection" : undefined}
                       >
                         <div className="flex items-start gap-1.5">
                           <span className="text-base shrink-0">
@@ -266,6 +334,11 @@ function StepPlannerContent() {
                             <p className="text-sm font-medium truncate mt-0.5">
                               {question.options[answerIndex].text.split(/[,.-]/)[0]}
                             </p>
+                            {isReviseMode && (
+                              <p className="text-xs text-primary mt-1 font-medium">
+                                Click to revise
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -278,7 +351,7 @@ function StepPlannerContent() {
         })}
       </div>
     );
-  }, [answers, questions, parseTimeToMinutes, getCategoryIcon]);
+  }, [answers, questions, parseTimeToMinutes, getCategoryIcon, isReviseMode, handleJumpToQuestion]);
 
   if (!questions) {
     return (
@@ -347,13 +420,147 @@ function StepPlannerContent() {
         </Card>
       </div>
 
+      {/* Completion Section */}
+      {isActuallyDone && !isReviseMode && (
+        <div className="space-y-6 animate-in zoom-in duration-500">
+          <Card className="border-2 border-primary shadow-xl">
+            <CardHeader className="text-center space-y-4">
+              <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-r from-primary to-primary/60 flex items-center justify-center">
+                <Check className="h-10 w-10 text-primary-foreground" />
+              </div>
+              <CardTitle className="text-3xl">Your Berlin Adventure Awaits! 🎉</CardTitle>
+              <CardDescription className="text-base max-w-2xl mx-auto">
+                Congratulations! We&apos;ve created your perfect {totalDays}-day itinerary based on
+                your preferences. Review your personalized timeline below.
+              </CardDescription>
+            </CardHeader>
+            <Separator />
+            <CardContent className="pt-6">
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/50 rounded-lg">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-primary">{totalDays}</div>
+                    <div className="text-sm text-muted-foreground">Days</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-primary">{answers.length}</div>
+                    <div className="text-sm text-muted-foreground">Activities</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-primary">
+                      {new Set(questions.map((q) => q.category)).size}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Categories</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-primary">100%</div>
+                    <div className="text-sm text-muted-foreground">Complete</div>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+                  <Button size="lg" onClick={() => router.push("/")} className="w-full sm:w-auto">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    Plan Another Trip
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={handleShare}
+                    className="w-full sm:w-auto"
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share Plan
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={handleRevisePlan}
+                    className="w-full sm:w-auto"
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Revise Plan
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Revise Plan Interface */}
+      {isReviseMode && (
+        <div className="space-y-6 animate-in slide-in-from-top duration-500">
+          <Card className="border-2 border-primary/20 shadow-lg">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Edit3 className="h-5 w-5 text-primary" />
+                <CardTitle className="text-2xl">Revise Your Plan</CardTitle>
+              </div>
+              <CardDescription>
+                You can either provide a new prompt to regenerate your entire plan, or click on
+                specific timeline items to revise individual selections.
+              </CardDescription>
+            </CardHeader>
+            <Separator />
+            <CardContent className="pt-6 space-y-6">
+              {/* New Prompt Section */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">New Prompt (Optional)</label>
+                  <textarea
+                    value={newPrompt}
+                    onChange={(e) => setNewPrompt(e.target.value)}
+                    placeholder="Describe what you'd like to change about your plan..."
+                    className="w-full min-h-[100px] p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleNewPromptSubmit}
+                    disabled={!newPrompt.trim()}
+                    className="flex-1 sm:flex-none"
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Regenerate Plan
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleCancelRevise}
+                    className="flex-1 sm:flex-none"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+
+              {/* Timeline Interaction Instructions */}
+              <div className="p-4 bg-muted/50 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <span className="text-sm font-medium text-primary">💡</span>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-medium text-sm">Or click on timeline items below</p>
+                    <p className="text-sm text-muted-foreground">
+                      Click on any activity in your timeline to jump back to that question and make
+                      changes. Items will be highlighted and show "Click to revise" when you can
+                      interact with them.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Timeline */}
       {answers.length > 0 && (
         <div className="animate-in slide-in-from-top duration-500">{renderTimeline()}</div>
       )}
 
       {/* Question Section */}
-      {!isDone ? (
+      {!isActuallyDone ? (
         <div className="space-y-6 animate-in slide-in-from-right duration-300">
           <Card className="border-2 border-primary/20 shadow-lg">
             <CardHeader>
@@ -367,7 +574,9 @@ function StepPlannerContent() {
                       {getCategoryIcon(questions[current].category)} {questions[current].category}
                     </Badge>
                   </div>
-                  <CardTitle className="text-2xl">Choose Your Experience</CardTitle>
+                  <CardTitle className="text-2xl">
+                    {isSingleQuestionRevision ? "Revise Your Selection" : "Choose Your Experience"}
+                  </CardTitle>
                   <CardDescription className="flex items-center gap-2 text-base">
                     <Clock className="h-4 w-4" />
                     {questions[current].startTime} - {questions[current].endTime}
@@ -459,74 +668,14 @@ function StepPlannerContent() {
                     className="w-full sm:w-auto shadow-md hover:shadow-lg transition-all"
                   >
                     <Sparkles className="h-4 w-4 mr-2" />
-                    Continue
+                    {isSingleQuestionRevision ? "Update Selection" : "Continue"}
                   </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
-      ) : (
-        <div className="space-y-6 animate-in zoom-in duration-500">
-          <Card className="border-2 border-primary shadow-xl">
-            <CardHeader className="text-center space-y-4">
-              <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-r from-primary to-primary/60 flex items-center justify-center">
-                <Check className="h-10 w-10 text-primary-foreground" />
-              </div>
-              <CardTitle className="text-3xl">Your Berlin Adventure Awaits! 🎉</CardTitle>
-              <CardDescription className="text-base max-w-2xl mx-auto">
-                Congratulations! We&apos;ve created your perfect {totalDays}-day itinerary based on
-                your preferences. Review your personalized timeline below.
-              </CardDescription>
-            </CardHeader>
-            <Separator />
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/50 rounded-lg">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{totalDays}</div>
-                    <div className="text-sm text-muted-foreground">Days</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{answers.length}</div>
-                    <div className="text-sm text-muted-foreground">Activities</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">
-                      {new Set(questions.map((q) => q.category)).size}
-                    </div>
-                    <div className="text-sm text-muted-foreground">Categories</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">100%</div>
-                    <div className="text-sm text-muted-foreground">Complete</div>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-                  <Button size="lg" onClick={() => router.push("/")} className="w-full sm:w-auto">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    Plan Another Trip
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={() => {
-                      setCurrent(0);
-                      setAnswers([]);
-                    }}
-                    className="w-full sm:w-auto"
-                  >
-                    Start Over
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Final Timeline */}
-          {renderTimeline()}
-        </div>
-      )}
+      ) : null}
     </div>
   );
 }
