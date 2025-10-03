@@ -24,7 +24,9 @@ export default function RootLayout({
               AIKU
             </div>
           </header>
-          <main className="w-full max-w-3xl mx-auto px-4 py-8 md:px-8 md:pt-28">{children}</main>
+          <main className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 lg:pt-20">
+            <div className="max-w-6xl mx-auto">{children}</div>
+          </main>
         </KBarProvider>
       </body>
     </html>

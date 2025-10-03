@@ -15,14 +15,14 @@ interface PlanChoiceModalProps {
 export function PlanChoiceModal({ onClose, onChoose }: PlanChoiceModalProps) {
   return (
     <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300"
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50 animate-in fade-in duration-300"
       role="dialog"
       aria-modal="true"
       aria-labelledby="plan-choice-title"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-3xl animate-in zoom-in-95 duration-300"
+        className="w-full max-w-4xl animate-in zoom-in-95 duration-300"
         role="document"
         onClick={(e) => e.stopPropagation()}
       >
@@ -31,16 +31,16 @@ export function PlanChoiceModal({ onClose, onChoose }: PlanChoiceModalProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="absolute right-4 top-4"
+              className="absolute right-2 sm:right-4 top-2 sm:top-4"
               onClick={onClose}
               aria-label="Close"
             >
               <X className="h-4 w-4" />
             </Button>
-            <CardTitle id="plan-choice-title" className="text-2xl pr-10">
+            <CardTitle id="plan-choice-title" className="text-xl sm:text-2xl pr-10">
               Choose Your Planning Style
             </CardTitle>
-            <CardDescription className="text-base">
+            <CardDescription className="text-sm sm:text-base">
               Select the approach that works best for you
             </CardDescription>
           </CardHeader>
@@ -52,12 +52,12 @@ export function PlanChoiceModal({ onClose, onChoose }: PlanChoiceModalProps) {
             >
               <CardHeader className="space-y-4">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <Layers className="h-6 w-6 text-primary" />
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <Layers className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                     </div>
                     <div>
-                      <CardTitle className="text-xl">Step by Step</CardTitle>
+                      <CardTitle className="text-lg sm:text-xl">Step by Step</CardTitle>
                       <Badge variant="secondary" className="mt-1">
                         Recommended
                       </Badge>

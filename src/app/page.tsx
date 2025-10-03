@@ -42,15 +42,15 @@ export default function Home() {
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
       {/* Hero Section */}
-      <div className="text-center space-y-4 pt-8">
+      <div className="text-center space-y-4 pt-4 sm:pt-6 md:pt-8">
         <Badge variant="secondary" className="mb-2">
           <Sparkles className="h-3 w-3 mr-1" />
           AI-Powered Travel Planning
         </Badge>
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent px-4">
           Plan Your Perfect Trip
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
           Describe your dream journey and let our AI create a personalized itinerary tailored to
           your preferences, budget, and travel style.
         </p>
@@ -72,7 +72,7 @@ export default function Home() {
             <div className="relative">
               <textarea
                 className={`
-                  w-full min-h-[120px] px-4 py-3 
+                  w-full min-h-[100px] sm:min-h-[120px] px-3 sm:px-4 py-2 sm:py-3 
                   border-2 rounded-xl 
                   bg-background text-foreground 
                   resize-y leading-relaxed
@@ -110,7 +110,7 @@ export default function Home() {
             <Button
               type="submit"
               size="lg"
-              className="w-full text-lg h-12 shadow-md hover:shadow-lg transition-all"
+              className="w-full text-base sm:text-lg h-11 sm:h-12 shadow-md hover:shadow-lg transition-all"
               disabled={!prompt.trim()}
             >
               <Sparkles className="h-5 w-5 mr-2" />
@@ -144,7 +144,7 @@ export default function Home() {
       </Card>
 
       {/* Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 pt-4">
         <Card className="border-primary/20 hover:border-primary/40 transition-colors">
           <CardHeader>
             <CardTitle className="text-base">🎯 Personalized</CardTitle>

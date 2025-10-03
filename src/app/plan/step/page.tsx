@@ -188,7 +188,7 @@ function StepPlannerContent() {
                     );
                   })}
                 </div>
-                <div className="mt-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
                   {items.map(({ question, answerIndex, index: i }) => (
                     <div
                       key={i}
@@ -318,7 +318,7 @@ function StepPlannerContent() {
             </CardHeader>
             <Separator />
             <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                 {questions[current].options.map((option, i) => (
                   <Card
                     key={i}
@@ -333,7 +333,7 @@ function StepPlannerContent() {
                     onClick={() => !isAnimating && handleSelect(i)}
                   >
                     {option.imageId && (
-                      <div className="relative h-48 w-full overflow-hidden">
+                      <div className="relative h-40 sm:h-48 lg:h-56 w-full overflow-hidden">
                         <Image
                           src={`https://picsum.photos/id/${option.imageId}/600/400`}
                           alt={option.text}
