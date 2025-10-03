@@ -4,12 +4,8 @@ import { useEffect, useState, Suspense, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ChevronLeft, Check, Clock, MapPin, Calendar, Sparkles } from "lucide-react";
 import Image from "next/image";
-import {
-  fetchMockQuestionnaire,
-  mockSubmitSelection,
-  mockLogSelectionContents,
-  type Question,
-} from "@/utils/questionnaire";
+import { questionnaireApi } from "@/services/api";
+import type { Question } from "@/utils/questionnaire";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,9 +26,14 @@ function StepPlannerContent() {
 
   useEffect(() => {
     let mounted = true;
-    fetchMockQuestionnaire(totalDays).then((q) => {
-      if (mounted) setQuestions(q);
-    });
+    questionnaireApi
+      .get(totalDays)
+      .then((response) => {
+        if (mounted) setQuestions(response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to load questionnaire:", error);
+      });
     return () => {
       mounted = false;
     };
@@ -91,19 +92,23 @@ function StepPlannerContent() {
 
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    // Log and submit each selected option
-    for (const optionIndex of selectedOptions) {
-      const option = question.options[optionIndex];
-      await mockLogSelectionContents(current, option, {
-        day: question.day,
-        startTime: question.startTime,
-        endTime: question.endTime,
+    // Submit all selected options via API
+    const selectedOptionObjects = selectedOptions.map(
+      (optionIndex) => question.options[optionIndex]
+    );
+
+    try {
+      await questionnaireApi.submit({
+        questionIndex: current,
+        options: selectedOptionObjects,
+        meta: {
+          day: question.day,
+          startTime: question.startTime,
+          endTime: question.endTime,
+        },
       });
-      await mockSubmitSelection(current, option, {
-        day: question.day,
-        startTime: question.startTime,
-        endTime: question.endTime,
-      });
+    } catch (error) {
+      console.error("Failed to submit answers:", error);
     }
 
     setAnswers((prev) => {

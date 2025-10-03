@@ -17,7 +17,7 @@ import {
   Sparkles,
   Check,
 } from "lucide-react";
-import { fetchTemplateById } from "@/utils/mock-templates";
+import { templatesApi } from "@/services/api";
 import type { TripTemplate } from "@/types/template";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,8 +39,13 @@ export default function TemplateDetailPage() {
 
   async function loadTemplate() {
     setIsLoading(true);
-    const data = await fetchTemplateById(params.id as string);
-    setTemplate(data);
+    try {
+      const response = await templatesApi.getById(params.id as string);
+      setTemplate(response.data);
+    } catch (error) {
+      console.error("Failed to load template:", error);
+      setTemplate(null);
+    }
     setIsLoading(false);
   }
 
@@ -78,9 +83,19 @@ export default function TemplateDetailPage() {
     }
   };
 
-  const handleFork = () => {
-    // TODO: Navigate to customization page
-    alert("Fork feature: This will let you customize this template! Coming soon...");
+  const handleFork = async () => {
+    if (!template) return;
+
+    try {
+      const response = await templatesApi.fork(template.id);
+      console.log("Template forked:", response.data);
+      alert(`Template forked successfully! New ID: ${response.data.id}`);
+      // TODO: Navigate to customization page with forked template
+      // router.push(`/plan/customize/${response.data.id}`);
+    } catch (error) {
+      console.error("Failed to fork template:", error);
+      alert("Failed to fork template. Please try again.");
+    }
   };
 
   const handleShare = () => {
@@ -212,7 +227,19 @@ export default function TemplateDetailPage() {
             <div className="flex gap-2 w-full sm:w-auto">
               <Button
                 variant="outline"
-                onClick={() => setIsLiked(!isLiked)}
+                onClick={async () => {
+                  if (!template) return;
+                  try {
+                    if (isLiked) {
+                      await templatesApi.unlike(template.id);
+                    } else {
+                      await templatesApi.like(template.id);
+                    }
+                    setIsLiked(!isLiked);
+                  } catch (error) {
+                    console.error("Failed to toggle like:", error);
+                  }
+                }}
                 className={cn(isLiked && "border-red-500 text-red-500")}
               >
                 <Heart className={cn("h-4 w-4 mr-2", isLiked && "fill-red-500")} />

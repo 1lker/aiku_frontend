@@ -16,7 +16,7 @@ import {
   Sparkles,
   GitFork,
 } from "lucide-react";
-import { fetchTemplates } from "@/utils/mock-templates";
+import { templatesApi } from "@/services/api";
 import type { TripTemplate } from "@/types/template";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -37,8 +37,13 @@ export default function TemplatesPage() {
 
   async function loadTemplates() {
     setIsLoading(true);
-    const data = await fetchTemplates({ sortBy: selectedFilter });
-    setTemplates(data);
+    try {
+      const response = await templatesApi.getAll({ sortBy: selectedFilter });
+      setTemplates(response.data);
+    } catch (error) {
+      console.error("Failed to load templates:", error);
+      setTemplates([]);
+    }
     setIsLoading(false);
   }
 
