@@ -26,7 +26,7 @@ function StepPlannerContent() {
   const [answers, setAnswers] = useState<number[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [totalDays, setTotalDays] = useState(3);
+  const [totalDays] = useState(3); // Can be changed to setTotalDays for dynamic trip length
 
   useEffect(() => {
     let mounted = true;
@@ -41,7 +41,7 @@ function StepPlannerContent() {
   const isDone = questions ? current >= questions.length : false;
   const progress = questions ? (current / questions.length) * 100 : 0;
 
-  const getCategoryIcon = (category?: string) => {
+  const getCategoryIcon = useCallback((category?: string) => {
     switch (category) {
       case "breakfast":
         return "🥐";
@@ -60,7 +60,7 @@ function StepPlannerContent() {
       default:
         return "⭐";
     }
-  };
+  }, []);
 
   const parseTimeToMinutes = useCallback((t: string): number => {
     const [hh, mm] = t.split(":").map((v) => parseInt(v, 10));
