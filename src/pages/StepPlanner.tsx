@@ -28,6 +28,48 @@ function StepPlanner() {
 
   const isDone = questions ? current >= questions.length : false
 
+  function parseTimeToMinutes(t: string): number {
+    const [hh, mm] = t.split(':').map((v) => parseInt(v, 10))
+    return hh * 60 + mm
+  }
+
+  function renderTimeline() {
+    if (!answers.length) return null
+    const items = questions!.slice(0, answers.length)
+    // compute overall range from first start to last end for that day
+    const overallStart = parseTimeToMinutes(items[0].startTime)
+    const overallEnd = parseTimeToMinutes(items[items.length - 1].endTime)
+    const total = overallEnd - overallStart
+    const colors = ['#A7F3D0', '#93C5FD', '#FBCFE8', '#FDE68A', '#C7D2FE', '#FCA5A5', '#FDBA74']
+
+    return (
+      <div className="timeline" aria-label="Selections timeline">
+        <div className="timeline-track">
+          {items.map((q, i) => {
+            const start = parseTimeToMinutes(q.startTime)
+            const end = parseTimeToMinutes(q.endTime)
+            const leftPct = ((start - overallStart) / total) * 100
+            const widthPct = ((end - start) / total) * 100
+            const label = `${q.startTime}–${q.endTime}`
+            const optionText = q.options[answers[i]].text
+            const bg = colors[i % colors.length]
+            return (
+              <div
+                key={i}
+                className="timeline-segment"
+                style={{ left: `${leftPct}%`, width: `${widthPct}%`, background: bg }}
+                title={`${label} · ${optionText}`}
+              >
+                <span style={{ padding: '0 8px' }}>{label}</span>
+              </div>
+            )
+          })}
+        </div>
+        {null}
+      </div>
+    )
+  }
+
   async function handleSelect(optionIndex: number) {
     const question = questions![current]
     const option = question.options[optionIndex]
@@ -53,18 +95,7 @@ function StepPlanner() {
   return (
     <div className="page">
       <h2>Plan Step by Step</h2>
-      {answers.length > 0 && (
-        <div style={{ marginTop: 12, width: '100%' }}>
-          <strong>Selections so far</strong>
-          <ol style={{ marginTop: 8 }}>
-            {questions!.slice(0, answers.length).map((q, i) => (
-              <li key={i}>
-                Day {q.day} · {q.startTime}-{q.endTime}: {q.options[answers[i]].text}
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
+      {answers.length > 0 && renderTimeline()}
 
       {!isDone ? (
         <div style={{ marginTop: 16, width: '100%' }}>
