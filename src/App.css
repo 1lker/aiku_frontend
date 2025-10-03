@@ -1,0 +1,91 @@
+/* Layout */
+#root {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 108px 2rem 2rem; /* extra space for larger title */
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Top bar */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.topbar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #000000;
+}
+
+.topbar-title.large {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  letter-spacing: 0.14em;
+}
+
+/* Tabs */
+/* Removed tab styling */
+
+/* Content wrapper (intentionally unused placeholder removed) */
+
+.tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tab-helper {
+  color: #9aa0a6;
+}
+
+/* Prompt Bar */
+.prompt-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.prompt-textarea {
+  flex: 1;
+  min-height: 56px;
+  max-height: 200px;
+  padding: 10px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: #000000;
+  resize: vertical;
+  line-height: 1.4;
+}
+
+.prompt-input::placeholder {
+  color: #888;
+}
+
+.prompt-button {
+  height: 56px;
+  padding: 0 20px;
+  border-radius: 12px;
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Wider layout */
+.tab-content {
+  max-width: 840px;
+  margin: 0 auto;
+}
