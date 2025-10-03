@@ -548,8 +548,8 @@ function StepPlannerContent() {
                     <p className="font-medium text-sm">Or click on timeline items below</p>
                     <p className="text-sm text-muted-foreground">
                       Click on any activity in your timeline to jump back to that question and make
-                      changes. Items will be highlighted and show "Click to revise" when you can
-                      interact with them.
+                      changes. Items will be highlighted and show &quot;Click to revise&quot; when
+                      you can interact with them.
                     </p>
                   </div>
                 </div>
