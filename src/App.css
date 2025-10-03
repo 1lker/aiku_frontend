@@ -146,4 +146,33 @@
   border: 1px solid #e5e5e5;
 }
 
+/* Questionnaire grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.option-card {
+  width: 100%;
+  height: auto; /* override .modal-button fixed height */
+  min-height: 64px;
+  text-align: left;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  word-break: break-word;
+  white-space: normal;
+  box-sizing: border-box;
+  line-height: 1.35;
+}
+
+.option-card > strong,
+.option-card > span {
+  display: block;
+}
+
 
