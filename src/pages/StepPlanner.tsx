@@ -33,39 +33,52 @@ function StepPlanner() {
     return hh * 60 + mm
   }
 
-  function renderTimeline() {
+  function renderTimelines() {
     if (!answers.length) return null
-    const items = questions!.slice(0, answers.length)
-    // compute overall range from first start to last end for that day
-    const overallStart = parseTimeToMinutes(items[0].startTime)
-    const overallEnd = parseTimeToMinutes(items[items.length - 1].endTime)
-    const total = overallEnd - overallStart
+    const answered = questions!.slice(0, answers.length).map((q, i) => ({ q, answerIndex: answers[i] }))
+    const byDay = new Map<number, { q: Question; answerIndex: number }[]>()
+    for (const item of answered) {
+      const list = byDay.get(item.q.day) || []
+      list.push(item)
+      byDay.set(item.q.day, list)
+    }
     const colors = ['#A7F3D0', '#93C5FD', '#FBCFE8', '#FDE68A', '#C7D2FE', '#FCA5A5', '#FDBA74']
 
+    const dayKeys = Array.from(byDay.keys()).sort((a, b) => a - b)
     return (
-      <div className="timeline" aria-label="Selections timeline">
-        <div className="timeline-track">
-          {items.map((q, i) => {
-            const start = parseTimeToMinutes(q.startTime)
-            const end = parseTimeToMinutes(q.endTime)
-            const leftPct = ((start - overallStart) / total) * 100
-            const widthPct = ((end - start) / total) * 100
-            const label = `${q.startTime}–${q.endTime}`
-            const optionText = q.options[answers[i]].text
-            const bg = colors[i % colors.length]
-            return (
-              <div
-                key={i}
-                className="timeline-segment"
-                style={{ left: `${leftPct}%`, width: `${widthPct}%`, background: bg }}
-                title={`${label} · ${optionText}`}
-              >
-                <span style={{ padding: '0 8px' }}>{label}</span>
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {dayKeys.map((day) => {
+          const items = byDay.get(day)!
+          const overallStart = parseTimeToMinutes(items[0].q.startTime)
+          const overallEnd = parseTimeToMinutes(items[items.length - 1].q.endTime)
+          const total = overallEnd - overallStart
+          return (
+            <div key={day} className="timeline" aria-label={`Day ${day} timeline`}>
+              <div style={{ marginBottom: 8, fontWeight: 700 }}>Day {day}</div>
+              <div className="timeline-track">
+                {items.map((item, i) => {
+                  const start = parseTimeToMinutes(item.q.startTime)
+                  const end = parseTimeToMinutes(item.q.endTime)
+                  const leftPct = ((start - overallStart) / total) * 100
+                  const widthPct = ((end - start) / total) * 100
+                  const label = `${item.q.startTime}–${item.q.endTime}`
+                  const optionText = item.q.options[item.answerIndex].text
+                  const bg = colors[i % colors.length]
+                  return (
+                    <div
+                      key={i}
+                      className="timeline-segment"
+                      style={{ left: `${leftPct}%`, width: `${widthPct}%`, background: bg }}
+                      title={`${label} · ${optionText}`}
+                    >
+                      <span style={{ padding: '0 8px' }}>{label}</span>
+                    </div>
+                  )
+                })}
               </div>
-            )
-          })}
-        </div>
-        {null}
+            </div>
+          )
+        })}
       </div>
     )
   }
@@ -95,7 +108,7 @@ function StepPlanner() {
   return (
     <div className="page">
       <h2>Plan Step by Step</h2>
-      {answers.length > 0 && renderTimeline()}
+      {answers.length > 0 && renderTimelines()}
 
       {!isDone ? (
         <div style={{ marginTop: 16, width: '100%' }}>

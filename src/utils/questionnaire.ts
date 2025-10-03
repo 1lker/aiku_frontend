@@ -14,6 +14,121 @@ export interface Question {
 export async function fetchMockQuestionnaire(): Promise<Question[]> {
   const data: Question[] = [
     {
+        day: 1,
+        startTime:  "08:00",
+        endTime:    "12:00",
+        options: [
+          {
+            text: "İstanbul Havalimanı’ndan Berlin’e uçuş.",
+            description: "Sabah erken uçuş seçeneği ile Berlin’e günün büyük kısmını değerlendirme imkanı."
+          },
+          {
+            text: "Sabiha Gökçen Havalimanı’ndan Berlin’e uçuş.",
+            description: "Alternatif havalimanı seçeneği; bazen daha uygun fiyatlı biletler bulunabilir."
+          },
+          {
+            text: "Business class uçuş ile rahat bir yolculuk.",
+            description: "Konforlu seyahat etmek ve dinlenmiş bir şekilde Berlin’e varmak isteyenler için uygun."
+          },
+          {
+            text: "Aktarmalı uçuş ile Berlin’e varış.",
+            description: "Daha uzun sürse de bazen fiyat avantajı sağlayan bir seçenek."
+          }
+        ]
+      },
+      {
+        day: 1,
+        startTime:  "12:00",
+        endTime:    "14:00",
+        options: [
+          {
+            text: "Otele giriş yapıp kısa dinlenme.",
+            description: "Yolculuk sonrası toparlanmak ve enerjiyi yeniden kazanmak için ideal."
+          },
+          {
+            text: "Yakındaki kafede hızlı bir öğle yemeği.",
+            description: "Açlığı gidermek ve keşfe çıkmadan önce enerji toplamak için pratik bir seçenek."
+          },
+          {
+            text: "Otelde kısa bir duş alıp hazırlanmak.",
+            description: "Taze bir başlangıç yapmak isteyenler için uygun."
+          },
+          {
+            text: "Otel çevresinde kısa bir keşif yürüyüşü.",
+            description: "Mahalleyi tanımak ve çevre hakkında fikir edinmek için iyi bir başlangıç."
+          }
+        ]
+      },
+      {
+        day: 1,
+        startTime:  "14:00",
+        endTime:    "17:00",
+        options: [
+          {
+            text: "Alexanderplatz ve Berlin TV Kulesi ziyareti.",
+            description: "Şehrin simgelerinden birini görme ve panoramik manzarayı deneyimleme fırsatı."
+          },
+          {
+            text: "Tiergarten Park’ta öğleden sonra yürüyüşü.",
+            description: "Doğayla buluşmak ve yorgunluğu atmak isteyenler için sakin bir seçenek."
+          },
+          {
+            text: "Checkpoint Charlie ve Berlin Duvarı Müzesi.",
+            description: "Soğuk Savaş tarihini merak edenler için ilgi çekici bir ziyaret."
+          },
+          {
+            text: "Nikolaiviertel bölgesinde tarihi keşif.",
+            description: "Berlin’in en eski mahallelerinden birini görmek isteyenler için keyifli bir seçenek."
+          }
+        ]
+      },
+      {
+        day: 1,
+        startTime:  "17:00",
+        endTime:    "19:00",
+        options: [
+          {
+            text: "Otelde dinlenme ve hazırlık.",
+            description: "Akşam aktiviteleri öncesinde enerji toplamak için ideal."
+          },
+          {
+            text: "Yerel kafede kahve molası.",
+            description: "Berlin’in kahve kültürünü deneyimlemek için harika bir fırsat."
+          },
+          {
+            text: "Spree Nehri kıyısında yürüyüş.",
+            description: "Manzara eşliğinde gün batımını izlemek isteyenler için romantik bir seçenek."
+          },
+          {
+            text: "Kısa bir alışveriş turu.",
+            description: "Hediyelik eşya veya küçük alışveriş yapmak isteyenler için uygun."
+          }
+        ]
+      },
+      {
+        day: 1,
+        startTime:  "19:00",
+        endTime:    "22:00",
+        options: [
+          {
+            text: "Berlin’de geleneksel Alman mutfağı restoranında akşam yemeği.",
+            description: "Sosis, schnitzel ve bira gibi yerel lezzetleri denemek isteyenler için ideal."
+          },
+          {
+            text: "Kreuzberg’de uluslararası mutfak deneyimi.",
+            description: "Berlin’in çok kültürlü mutfağını keşfetmek isteyenler için harika bir seçenek."
+          },
+          {
+            text: "Spree Nehri’nde akşam tekne turu.",
+            description: "Şehri ışıklar altında görmek isteyenler için romantik ve farklı bir deneyim."
+          },
+          {
+            text: "Bar ya da pub turu.",
+            description: "Berlin’in canlı gece hayatını keşfetmek isteyenler için eğlenceli bir alternatif."
+          }
+        ]
+      },
+    {
       day: 2,
       startTime: '08:00',
       endTime: '09:00',
