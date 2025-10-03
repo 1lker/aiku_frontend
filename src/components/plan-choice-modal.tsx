@@ -45,10 +45,10 @@ export function PlanChoiceModal({ onClose, onChoose }: PlanChoiceModalProps) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {/* 3 Options in Single Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* 2 Options in Single Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {/* Step by Step Option */}
-              <Card
+              {/* <Card
                 className="cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-primary border-2 group"
                 onClick={() => onChoose("step")}
               >
@@ -88,7 +88,7 @@ export function PlanChoiceModal({ onClose, onChoose }: PlanChoiceModalProps) {
                     Start Planning
                   </Button>
                 </CardContent>
-              </Card>
+              </Card> */}
 
               {/* Browse Templates Option */}
               <Card
@@ -152,8 +152,8 @@ export function PlanChoiceModal({ onClose, onChoose }: PlanChoiceModalProps) {
               >
                 <CardHeader className="space-y-3 pb-3">
                   <div className="flex flex-col items-center text-center gap-3">
-                    <div className="h-16 w-16 rounded-xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
-                      <Zap className="h-8 w-8 text-secondary" />
+                    <div className="h-16 w-16 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                      <Zap className="h-8 w-8 text-blue-600" />
                     </div>
                     <div>
                       <CardTitle className="text-lg mb-1">Full AI Plan</CardTitle>
@@ -169,15 +169,15 @@ export function PlanChoiceModal({ onClose, onChoose }: PlanChoiceModalProps) {
                   </CardDescription>
                   <div className="space-y-2">
                     <div className="flex items-start gap-2 text-xs text-muted-foreground">
-                      <span className="text-secondary font-bold">✓</span>
+                      <span className="text-blue-600 font-bold">✓</span>
                       <span>Instant itinerary</span>
                     </div>
                     <div className="flex items-start gap-2 text-xs text-muted-foreground">
-                      <span className="text-secondary font-bold">✓</span>
+                      <span className="text-blue-600 font-bold">✓</span>
                       <span>Flight & hotel suggestions</span>
                     </div>
                     <div className="flex items-start gap-2 text-xs text-muted-foreground">
-                      <span className="text-secondary font-bold">✓</span>
+                      <span className="text-blue-600 font-bold">✓</span>
                       <span>Complete schedule</span>
                     </div>
                   </div>
