@@ -23,10 +23,10 @@ function StepPlannerContent() {
   const prompt = searchParams.get("prompt");
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
+  const [answers, setAnswers] = useState<number[][]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [totalDays] = useState(3); // Can be changed to setTotalDays for dynamic trip length
+  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+  const [totalDays, setTotalDays] = useState(3);
 
   useEffect(() => {
     let mounted = true;
@@ -67,18 +67,33 @@ function StepPlannerContent() {
     return hh * 60 + mm;
   }, []);
 
-  const handleSelect = useCallback(
-    async (optionIndex: number) => {
-      if (!questions || isAnimating) return;
+  const toggleOption = useCallback(
+    (optionIndex: number) => {
+      if (isAnimating) return;
 
-      const question = questions[current];
+      setSelectedOptions((prev) => {
+        if (prev.includes(optionIndex)) {
+          return prev.filter((i) => i !== optionIndex);
+        } else {
+          return [...prev, optionIndex];
+        }
+      });
+    },
+    [isAnimating]
+  );
+
+  const handleContinue = useCallback(async () => {
+    if (!questions || isAnimating || selectedOptions.length === 0) return;
+
+    const question = questions[current];
+
+    setIsAnimating(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    // Log and submit each selected option
+    for (const optionIndex of selectedOptions) {
       const option = question.options[optionIndex];
-
-      setIsAnimating(true);
-      setSelectedOption(optionIndex);
-
-      await new Promise((resolve) => setTimeout(resolve, 400));
-
       await mockLogSelectionContents(current, option, {
         day: question.day,
         startTime: question.startTime,
@@ -89,20 +104,19 @@ function StepPlannerContent() {
         startTime: question.startTime,
         endTime: question.endTime,
       });
+    }
 
-      setAnswers((prev) => {
-        const next = [...prev];
-        next[current] = optionIndex;
-        return next;
-      });
+    setAnswers((prev) => {
+      const next = [...prev];
+      next[current] = selectedOptions;
+      return next;
+    });
 
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      setCurrent((c) => c + 1);
-      setSelectedOption(null);
-      setIsAnimating(false);
-    },
-    [questions, current, isAnimating]
-  );
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    setCurrent((c) => c + 1);
+    setSelectedOptions([]);
+    setIsAnimating(false);
+  }, [questions, current, isAnimating, selectedOptions]);
 
   const handlePrevious = useCallback(() => {
     if (current > 0 && !isAnimating) {
@@ -117,10 +131,26 @@ function StepPlannerContent() {
     const dayGroups = answeredQuestions.reduce(
       (acc, q, i) => {
         if (!acc[q.day]) acc[q.day] = [];
-        acc[q.day].push({ question: q, answerIndex: answers[i], index: i });
+        // For multi-select, we store the first selected option's index for timeline display
+        const answerIndices = answers[i];
+        const primaryAnswerIndex = Array.isArray(answerIndices) ? answerIndices[0] : answerIndices;
+        acc[q.day].push({
+          question: q,
+          answerIndex: primaryAnswerIndex,
+          answerIndices: answerIndices,
+          index: i,
+        });
         return acc;
       },
-      {} as Record<number, Array<{ question: Question; answerIndex: number; index: number }>>
+      {} as Record<
+        number,
+        Array<{
+          question: Question;
+          answerIndex: number;
+          answerIndices: number | number[];
+          index: number;
+        }>
+      >
     );
 
     const colors = [
@@ -188,27 +218,59 @@ function StepPlannerContent() {
                     );
                   })}
                 </div>
-                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-                  {items.map(({ question, answerIndex, index: i }) => (
-                    <div
-                      key={i}
-                      className="p-2 rounded-lg border bg-card hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-start gap-2">
-                        <span className="text-lg shrink-0">
-                          {getCategoryIcon(question.category)}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="text-xs font-medium text-muted-foreground">
-                            {question.startTime} - {question.endTime}
-                          </p>
-                          <p className="text-sm font-medium truncate mt-0.5">
-                            {question.options[answerIndex].text.split(/[,.-]/)[0]}
-                          </p>
+                <div
+                  className="mt-3 relative"
+                  style={{
+                    minHeight: `${
+                      Math.max(
+                        ...items.map(({ answerIndices }) => {
+                          const indices = Array.isArray(answerIndices)
+                            ? answerIndices
+                            : [answerIndices];
+                          return indices.length;
+                        })
+                      ) * 68
+                    }px`,
+                  }}
+                >
+                  {items.map(({ question, answerIndices, index: i }) => {
+                    const indices = Array.isArray(answerIndices) ? answerIndices : [answerIndices];
+                    const start = parseTimeToMinutes(question.startTime);
+                    const end = parseTimeToMinutes(question.endTime);
+                    const leftPct = ((start - overallStart) / total) * 100;
+                    const widthPct = ((end - start) / total) * 100;
+
+                    // Add horizontal padding (margin between columns)
+                    const paddingPct = 1; // 1% padding on each side
+                    const adjustedLeftPct = leftPct + paddingPct;
+                    const adjustedWidthPct = widthPct - paddingPct * 2;
+
+                    return indices.map((answerIndex, subIndex) => (
+                      <div
+                        key={`${i}-${subIndex}`}
+                        className="absolute p-1.5 rounded-lg border bg-card hover:shadow-md transition-shadow z-10"
+                        style={{
+                          left: `${adjustedLeftPct}%`,
+                          width: `${adjustedWidthPct}%`,
+                          top: `${subIndex * 68}px`,
+                        }}
+                      >
+                        <div className="flex items-start gap-1.5">
+                          <span className="text-base shrink-0">
+                            {getCategoryIcon(question.category)}
+                          </span>
+                          <div className="min-w-0">
+                            <p className="text-xs font-medium text-muted-foreground">
+                              {question.startTime} - {question.endTime}
+                            </p>
+                            <p className="text-sm font-medium truncate mt-0.5">
+                              {question.options[answerIndex].text.split(/[,.-]/)[0]}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ));
+                  })}
                 </div>
               </CardContent>
             </Card>
@@ -318,22 +380,22 @@ function StepPlannerContent() {
             </CardHeader>
             <Separator />
             <CardContent className="pt-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid grid-flow-col auto-cols-[minmax(16rem,1fr)] gap-3 sm:gap-4 overflow-x-auto pb-2">
                 {questions[current].options.map((option, i) => (
                   <Card
                     key={i}
                     className={cn(
-                      "cursor-pointer transition-all duration-300 overflow-hidden",
+                      "cursor-pointer transition-all duration-300 overflow-hidden relative",
                       "hover:shadow-2xl hover:scale-[1.02] hover:border-primary",
                       "active:scale-[0.98]",
-                      selectedOption === i &&
+                      selectedOptions.includes(i) &&
                         "ring-2 ring-primary shadow-2xl scale-[1.02] border-primary",
-                      isAnimating && selectedOption !== i && "opacity-50"
+                      isAnimating && "opacity-50"
                     )}
-                    onClick={() => !isAnimating && handleSelect(i)}
+                    onClick={() => !isAnimating && toggleOption(i)}
                   >
                     {option.imageId && (
-                      <div className="relative h-40 sm:h-48 lg:h-56 w-full overflow-hidden">
+                      <div className="relative h-28 sm:h-36 lg:h-44 w-full overflow-hidden">
                         <Image
                           src={`https://picsum.photos/id/${option.imageId}/600/400`}
                           alt={option.text}
@@ -341,7 +403,7 @@ function StepPlannerContent() {
                           className="object-cover transition-transform duration-300 group-hover:scale-110"
                           sizes="(max-width: 768px) 100vw, 50vw"
                         />
-                        {selectedOption === i && (
+                        {selectedOptions.includes(i) && (
                           <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
                             <div className="h-16 w-16 rounded-full bg-primary flex items-center justify-center animate-in zoom-in duration-200">
                               <Check className="h-8 w-8 text-primary-foreground" />
@@ -353,11 +415,6 @@ function StepPlannerContent() {
                     <CardHeader className="space-y-3">
                       <div className="flex items-start justify-between gap-2">
                         <CardTitle className="text-base leading-snug">{option.text}</CardTitle>
-                        {!option.imageId && selectedOption === i && (
-                          <div className="shrink-0 h-6 w-6 rounded-full bg-primary flex items-center justify-center animate-in zoom-in duration-200">
-                            <Check className="h-4 w-4 text-primary-foreground" />
-                          </div>
-                        )}
                       </div>
                       <CardDescription className="text-sm leading-relaxed">
                         {option.description}
@@ -376,18 +433,36 @@ function StepPlannerContent() {
                 ))}
               </div>
 
-              {/* Navigation Buttons */}
-              {current > 0 && (
-                <div className="mt-6 pt-6 border-t flex gap-3">
-                  <Button variant="outline" onClick={handlePrevious} disabled={isAnimating}>
-                    <ChevronLeft className="h-4 w-4 mr-2" />
-                    Previous
-                  </Button>
-                  <div className="text-sm text-muted-foreground flex items-center">
-                    Want to change your previous choice?
+              {/* Continue Button */}
+              <div className="mt-6 pt-6 border-t">
+                <div className="flex flex-col sm:flex-row gap-3 items-center">
+                  {current > 0 && (
+                    <Button variant="outline" onClick={handlePrevious} disabled={isAnimating}>
+                      <ChevronLeft className="h-4 w-4 mr-2" />
+                      Previous
+                    </Button>
+                  )}
+                  <div className="flex-1 text-sm text-muted-foreground">
+                    {selectedOptions.length > 0 ? (
+                      <span className="font-medium text-foreground">
+                        {selectedOptions.length} option{selectedOptions.length > 1 ? "s" : ""}{" "}
+                        selected
+                      </span>
+                    ) : (
+                      <span>Select at least one option to continue</span>
+                    )}
                   </div>
+                  <Button
+                    size="lg"
+                    onClick={handleContinue}
+                    disabled={isAnimating || selectedOptions.length === 0}
+                    className="w-full sm:w-auto shadow-md hover:shadow-lg transition-all"
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Continue
+                  </Button>
                 </div>
-              )}
+              </div>
             </CardContent>
           </Card>
         </div>

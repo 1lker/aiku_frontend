@@ -11,7 +11,6 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Enuygun brand colors
         primary: {
           DEFAULT: "#2cbe4b",
           50: "#f0fdf4",
@@ -26,7 +25,7 @@ const config: Config = {
           900: "#14532d",
         },
         secondary: {
-          DEFAULT: "#646cff",
+          DEFAULT: "#ecfff0",
           50: "#eff6ff",
           100: "#dbeafe",
           200: "#bfdbfe",
