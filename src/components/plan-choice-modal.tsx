@@ -1,11 +1,11 @@
 "use client";
 
-import { Layers, Zap, X } from "lucide-react";
+import { Layers, Zap, Library, X } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-type Mode = "step" | "full";
+type Mode = "step" | "full" | "templates";
 
 interface PlanChoiceModalProps {
   onClose: () => void;
@@ -22,7 +22,7 @@ export function PlanChoiceModal({ onClose, onChoose }: PlanChoiceModalProps) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-4xl animate-in zoom-in-95 duration-300"
+        className="w-full max-w-6xl animate-in zoom-in-95 duration-300"
         role="document"
         onClick={(e) => e.stopPropagation()}
       >
@@ -44,102 +44,153 @@ export function PlanChoiceModal({ onClose, onChoose }: PlanChoiceModalProps) {
               Select the approach that works best for you
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Step by Step Option */}
-            <Card
-              className="cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-primary border-2 group"
-              onClick={() => onChoose("step")}
-            >
-              <CardHeader className="space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <Layers className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+          <CardContent>
+            {/* 3 Options in Single Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Step by Step Option */}
+              <Card
+                className="cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-primary border-2 group"
+                onClick={() => onChoose("step")}
+              >
+                <CardHeader className="space-y-3 pb-3">
+                  <div className="flex flex-col items-center text-center gap-3">
+                    <div className="h-16 w-16 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <Layers className="h-8 w-8 text-primary" />
                     </div>
                     <div>
-                      <CardTitle className="text-lg sm:text-xl">Step by Step</CardTitle>
-                      <Badge variant="secondary" className="mt-1">
-                        Recommended
+                      <CardTitle className="text-lg mb-1">Step by Step</CardTitle>
+                      <Badge variant="secondary" className="text-xs">
+                        Most Popular
                       </Badge>
                     </div>
                   </div>
-                </div>
-                <CardDescription className="text-base leading-relaxed">
-                  Answer guided questions about your preferences, budget, and interests. Perfect for
-                  travelers who want a personalized experience with full control over every detail.
-                </CardDescription>
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary font-bold">✓</span>
-                    <span>Interactive questionnaire for each time slot</span>
+                </CardHeader>
+                <CardContent className="space-y-3 pt-0">
+                  <CardDescription className="text-sm leading-relaxed text-center">
+                    Answer guided questions to build your perfect itinerary
+                  </CardDescription>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <span className="text-primary font-bold">✓</span>
+                      <span>Interactive questionnaire</span>
+                    </div>
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <span className="text-primary font-bold">✓</span>
+                      <span>Visual timeline</span>
+                    </div>
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <span className="text-primary font-bold">✓</span>
+                      <span>Full control</span>
+                    </div>
                   </div>
-                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary font-bold">✓</span>
-                    <span>Visual timeline of your selections</span>
-                  </div>
-                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-primary font-bold">✓</span>
-                    <span>Fine-tune every aspect of your trip</span>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full" size="lg">
-                  <Layers className="h-4 w-4 mr-2" />
-                  Start Step by Step
-                </Button>
-              </CardContent>
-            </Card>
+                  <Button className="w-full mt-4" size="sm">
+                    <Layers className="h-4 w-4 mr-2" />
+                    Start Planning
+                  </Button>
+                </CardContent>
+              </Card>
 
-            {/* Full Plan Option */}
-            <Card
-              className="cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-primary border-2 group"
-              onClick={() => onChoose("full")}
-            >
-              <CardHeader className="space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
-                      <Zap className="h-6 w-6 text-secondary" />
+              {/* Browse Templates Option */}
+              <Card
+                className="cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-primary border-2 group relative overflow-hidden"
+                onClick={() => onChoose("templates")}
+              >
+                <div className="absolute top-2 right-2 z-10">
+                  <Badge
+                    variant="default"
+                    className="text-xs bg-gradient-to-r from-primary to-primary/80"
+                  >
+                    ✨ New
+                  </Badge>
+                </div>
+                <CardHeader className="space-y-3 pb-3">
+                  <div className="flex flex-col items-center text-center gap-3">
+                    <div className="h-16 w-16 rounded-xl bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                      <Library className="h-8 w-8 text-purple-600" />
                     </div>
                     <div>
-                      <CardTitle className="text-xl">Full Plan</CardTitle>
-                      <Badge variant="outline" className="mt-1">
+                      <CardTitle className="text-lg mb-1">Browse Templates</CardTitle>
+                      <Badge variant="outline" className="text-xs">
+                        Community
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3 pt-0">
+                  <CardDescription className="text-sm leading-relaxed text-center">
+                    Explore trips shared by other travelers and customize them
+                  </CardDescription>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <span className="text-purple-600 font-bold">✓</span>
+                      <span>Real traveler experiences</span>
+                    </div>
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <span className="text-purple-600 font-bold">✓</span>
+                      <span>Customize any template</span>
+                    </div>
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <span className="text-purple-600 font-bold">✓</span>
+                      <span>Save time planning</span>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    className="w-full mt-4 border-purple-200 hover:bg-purple-50"
+                    size="sm"
+                  >
+                    <Library className="h-4 w-4 mr-2" />
+                    Browse Templates
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Full AI Option */}
+              <Card
+                className="cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-secondary border-2 group"
+                onClick={() => onChoose("full")}
+              >
+                <CardHeader className="space-y-3 pb-3">
+                  <div className="flex flex-col items-center text-center gap-3">
+                    <div className="h-16 w-16 rounded-xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
+                      <Zap className="h-8 w-8 text-secondary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg mb-1">Full AI Plan</CardTitle>
+                      <Badge variant="outline" className="text-xs">
                         Quick Start
                       </Badge>
                     </div>
                   </div>
-                </div>
-                <CardDescription className="text-base leading-relaxed">
-                  Get an instant, complete itinerary including flights, accommodations, activities,
-                  and daily schedule. Great for travelers who prefer a ready-made plan to refine
-                  later.
-                </CardDescription>
-                <div className="space-y-2 pt-2">
-                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-secondary font-bold">✓</span>
-                    <span>Instant comprehensive itinerary</span>
+                </CardHeader>
+                <CardContent className="space-y-3 pt-0">
+                  <CardDescription className="text-sm leading-relaxed text-center">
+                    Get instant complete itinerary with AI recommendations
+                  </CardDescription>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <span className="text-secondary font-bold">✓</span>
+                      <span>Instant itinerary</span>
+                    </div>
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <span className="text-secondary font-bold">✓</span>
+                      <span>Flight & hotel suggestions</span>
+                    </div>
+                    <div className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <span className="text-secondary font-bold">✓</span>
+                      <span>Complete schedule</span>
+                    </div>
                   </div>
-                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-secondary font-bold">✓</span>
-                    <span>Flight and accommodation suggestions</span>
-                  </div>
-                  <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="text-secondary font-bold">✓</span>
-                    <span>Complete daily schedule with activities</span>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Button variant="secondary" className="w-full" size="lg">
-                  <Zap className="h-4 w-4 mr-2" />
-                  Get Full Plan
-                </Button>
-              </CardContent>
-            </Card>
+                  <Button variant="secondary" className="w-full mt-4" size="sm">
+                    <Zap className="h-4 w-4 mr-2" />
+                    Get Full Plan
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
 
-            <p className="text-center text-sm text-muted-foreground pt-2">
-              Don&apos;t worry, you can always switch between modes later
+            <p className="text-center text-sm text-muted-foreground pt-6">
+              You can switch between modes anytime during planning
             </p>
           </CardContent>
         </Card>

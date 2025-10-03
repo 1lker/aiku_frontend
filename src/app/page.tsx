@@ -184,8 +184,12 @@ export default function Home() {
           onClose={() => setShowChooser(false)}
           onChoose={(mode) => {
             setShowChooser(false);
-            const params = new URLSearchParams({ prompt });
-            router.push(`/plan/${mode}?${params.toString()}`);
+            if (mode === "templates") {
+              router.push("/plan/templates");
+            } else {
+              const params = new URLSearchParams({ prompt });
+              router.push(`/plan/${mode}?${params.toString()}`);
+            }
           }}
         />
       )}
