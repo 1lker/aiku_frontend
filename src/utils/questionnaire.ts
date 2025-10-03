@@ -1,295 +1,198 @@
 export interface Option {
-  text: string
-  description: string
+  text: string;
+  description: string;
 }
 
 export interface Question {
-  day: number
-  startTime: string
-  endTime: string
-  options: Option[]
+  day: number;
+  startTime: string;
+  endTime: string;
+  options: Option[];
 }
 
 // Mock: fetch a questionnaire definition from server
 export async function fetchMockQuestionnaire(): Promise<Question[]> {
   const data: Question[] = [
     {
-        day: 1,
-        startTime:  "08:00",
-        endTime:    "12:00",
-        options: [
-          {
-            text: "İstanbul Havalimanı’ndan Berlin’e uçuş.",
-            description: "Sabah erken uçuş seçeneği ile Berlin’e günün büyük kısmını değerlendirme imkanı."
-          },
-          {
-            text: "Sabiha Gökçen Havalimanı’ndan Berlin’e uçuş.",
-            description: "Alternatif havalimanı seçeneği; bazen daha uygun fiyatlı biletler bulunabilir."
-          },
-          {
-            text: "Business class uçuş ile rahat bir yolculuk.",
-            description: "Konforlu seyahat etmek ve dinlenmiş bir şekilde Berlin’e varmak isteyenler için uygun."
-          },
-          {
-            text: "Aktarmalı uçuş ile Berlin’e varış.",
-            description: "Daha uzun sürse de bazen fiyat avantajı sağlayan bir seçenek."
-          }
-        ]
-      },
-      {
-        day: 1,
-        startTime:  "12:00",
-        endTime:    "14:00",
-        options: [
-          {
-            text: "Otele giriş yapıp kısa dinlenme.",
-            description: "Yolculuk sonrası toparlanmak ve enerjiyi yeniden kazanmak için ideal."
-          },
-          {
-            text: "Yakındaki kafede hızlı bir öğle yemeği.",
-            description: "Açlığı gidermek ve keşfe çıkmadan önce enerji toplamak için pratik bir seçenek."
-          },
-          {
-            text: "Otelde kısa bir duş alıp hazırlanmak.",
-            description: "Taze bir başlangıç yapmak isteyenler için uygun."
-          },
-          {
-            text: "Otel çevresinde kısa bir keşif yürüyüşü.",
-            description: "Mahalleyi tanımak ve çevre hakkında fikir edinmek için iyi bir başlangıç."
-          }
-        ]
-      },
-      {
-        day: 1,
-        startTime:  "14:00",
-        endTime:    "17:00",
-        options: [
-          {
-            text: "Alexanderplatz ve Berlin TV Kulesi ziyareti.",
-            description: "Şehrin simgelerinden birini görme ve panoramik manzarayı deneyimleme fırsatı."
-          },
-          {
-            text: "Tiergarten Park’ta öğleden sonra yürüyüşü.",
-            description: "Doğayla buluşmak ve yorgunluğu atmak isteyenler için sakin bir seçenek."
-          },
-          {
-            text: "Checkpoint Charlie ve Berlin Duvarı Müzesi.",
-            description: "Soğuk Savaş tarihini merak edenler için ilgi çekici bir ziyaret."
-          },
-          {
-            text: "Nikolaiviertel bölgesinde tarihi keşif.",
-            description: "Berlin’in en eski mahallelerinden birini görmek isteyenler için keyifli bir seçenek."
-          }
-        ]
-      },
-      {
-        day: 1,
-        startTime:  "17:00",
-        endTime:    "19:00",
-        options: [
-          {
-            text: "Otelde dinlenme ve hazırlık.",
-            description: "Akşam aktiviteleri öncesinde enerji toplamak için ideal."
-          },
-          {
-            text: "Yerel kafede kahve molası.",
-            description: "Berlin’in kahve kültürünü deneyimlemek için harika bir fırsat."
-          },
-          {
-            text: "Spree Nehri kıyısında yürüyüş.",
-            description: "Manzara eşliğinde gün batımını izlemek isteyenler için romantik bir seçenek."
-          },
-          {
-            text: "Kısa bir alışveriş turu.",
-            description: "Hediyelik eşya veya küçük alışveriş yapmak isteyenler için uygun."
-          }
-        ]
-      },
-      {
-        day: 1,
-        startTime:  "19:00",
-        endTime:    "22:00",
-        options: [
-          {
-            text: "Berlin’de geleneksel Alman mutfağı restoranında akşam yemeği.",
-            description: "Sosis, schnitzel ve bira gibi yerel lezzetleri denemek isteyenler için ideal."
-          },
-          {
-            text: "Kreuzberg’de uluslararası mutfak deneyimi.",
-            description: "Berlin’in çok kültürlü mutfağını keşfetmek isteyenler için harika bir seçenek."
-          },
-          {
-            text: "Spree Nehri’nde akşam tekne turu.",
-            description: "Şehri ışıklar altında görmek isteyenler için romantik ve farklı bir deneyim."
-          },
-          {
-            text: "Bar ya da pub turu.",
-            description: "Berlin’in canlı gece hayatını keşfetmek isteyenler için eğlenceli bir alternatif."
-          }
-        ]
-      },
-    {
       day: 2,
-      startTime: '08:00',
-      endTime: '09:00',
+      startTime: "08:00",
+      endTime: "09:00",
       options: [
         {
-          text: 'Otele yakın bir kafede geleneksel Alman kahvaltısı (brötchen, peynir, salam).',
-          description: 'Hızlı ve lezzetli bir başlangıç; yerel tatları deneyimlemek isteyenler için ideal.',
+          text: "Otele yakın bir kafede geleneksel Alman kahvaltısı (brötchen, peynir, salam).",
+          description:
+            "Hızlı ve lezzetli bir başlangıç; yerel tatları deneyimlemek isteyenler için ideal.",
         },
         {
-          text: 'Café Einstein Berlin’de klasik Avusturya kahvaltısı (omlet, kahve, taze hamur işleri).',
-          description: 'Atmosferi ve zengin kahvaltısı ile kahve severler ve klasik Avusturya mutfağı meraklıları için harika.',
+          text: "Café Einstein Berlin'de klasik Avusturya kahvaltısı (omlet, kahve, taze hamur işleri).",
+          description:
+            "Atmosferi ve zengin kahvaltısı ile kahve severler ve klasik Avusturya mutfağı meraklıları için harika.",
         },
         {
-          text: 'Müzeler Adası çevresinde hızlı bir takeaway kahvaltı (sandviç ve kahve).',
-          description: 'Sabah turuna hızlıca başlamanızı sağlar, zaman kazanmak isteyenler için uygun.',
+          text: "Müzeler Adası çevresinde hızlı bir takeaway kahvaltı (sandviç ve kahve).",
+          description:
+            "Sabah turuna hızlıca başlamanızı sağlar, zaman kazanmak isteyenler için uygun.",
         },
         {
-          text: 'Otelde kahvaltı yapıp sabah yürüyüşü için Tiergarten Park’a kısa bir yürüyüş.',
-          description: 'Rahat ve sakin bir başlangıç; doğa yürüyüşü ile güne enerji dolu başlamak isteyenler için ideal.',
+          text: "Otelde kahvaltı yapıp sabah yürüyüşü için Tiergarten Park'a kısa bir yürüyüş.",
+          description:
+            "Rahat ve sakin bir başlangıç; doğa yürüyüşü ile güne enerji dolu başlamak isteyenler için ideal.",
         },
       ],
     },
     {
       day: 2,
-      startTime: '09:00',
-      endTime: '12:00',
+      startTime: "09:00",
+      endTime: "12:00",
       options: [
         {
-          text: 'Müze Adası’nda Pergamon Müzesi ve Eski Müze turu.',
-          description: 'Sanatseverler ve tarih meraklıları için dünyaca ünlü eserleri görebileceğiniz kapsamlı bir tur.',
+          text: "Müze Adası'nda Pergamon Müzesi ve Eski Müze turu.",
+          description:
+            "Sanatseverler ve tarih meraklıları için dünyaca ünlü eserleri görebileceğiniz kapsamlı bir tur.",
         },
         {
-          text: 'Berlin Katedrali ve Lustgarten çevresinde rehberli yürüyüş.',
-          description: 'Tarihi mimariyi ve çevredeki tarihi dokuyu keşfetmek isteyenler için ideal.',
+          text: "Berlin Katedrali ve Lustgarten çevresinde rehberli yürüyüş.",
+          description:
+            "Tarihi mimariyi ve çevredeki tarihi dokuyu keşfetmek isteyenler için ideal.",
         },
         {
-          text: 'Neues Museum ve Bode Müzesi ziyareti (antik eserler ve heykeller).',
-          description: 'Eski uygarlıklar ve heykel sanatına ilgi duyanlar için etkileyici bir deneyim.',
+          text: "Neues Museum ve Bode Müzesi ziyareti (antik eserler ve heykeller).",
+          description:
+            "Eski uygarlıklar ve heykel sanatına ilgi duyanlar için etkileyici bir deneyim.",
         },
         {
-          text: 'Berlin Devlet Opera Binası’nda rehberli tur veya kısa bir fotoğraf turu.',
-          description: 'Sanat ve mimari meraklıları için harika bir seçenek; fotoğraf çekmeyi sevenler için ideal.',
+          text: "Berlin Devlet Opera Binası'nda rehberli tur veya kısa bir fotoğraf turu.",
+          description:
+            "Sanat ve mimari meraklıları için harika bir seçenek; fotoğraf çekmeyi sevenler için ideal.",
         },
       ],
     },
     {
       day: 2,
-      startTime: '12:00',
-      endTime: '14:00',
+      startTime: "12:00",
+      endTime: "14:00",
       options: [
         {
-          text: 'Hackescher Markt civarında Alman mutfağı restoranı (sosis ve patates).',
-          description: 'Klasik Alman lezzetlerini deneyimlemek isteyenler için mükemmel bir seçenek.',
+          text: "Hackescher Markt civarında Alman mutfağı restoranı (sosis ve patates).",
+          description:
+            "Klasik Alman lezzetlerini deneyimlemek isteyenler için mükemmel bir seçenek.",
         },
         {
-          text: 'Markthalle Neun’de street food ve uluslararası lezzetler.',
-          description: 'Farklı mutfakları denemek ve hareketli bir ortamda yemek yemek isteyenler için ideal.',
+          text: "Markthalle Neun'de street food ve uluslararası lezzetler.",
+          description:
+            "Farklı mutfakları denemek ve hareketli bir ortamda yemek yemek isteyenler için ideal.",
         },
         {
-          text: 'Prenzlauer Berg’de kafede hafif bir brunch (salata, sandviç, kahve).',
-          description: 'Daha sakin ve hafif bir öğle yemeği tercih edenler için uygun.',
+          text: "Prenzlauer Berg'de kafede hafif bir brunch (salata, sandviç, kahve).",
+          description: "Daha sakin ve hafif bir öğle yemeği tercih edenler için uygun.",
         },
         {
-          text: 'Spree Nehri kenarında piknik veya takeaway atıştırmalık.',
-          description: 'Manzaralı ve rahat bir ortamda yemek keyfi yapmak isteyenler için harika.',
+          text: "Spree Nehri kenarında piknik veya takeaway atıştırmalık.",
+          description: "Manzaralı ve rahat bir ortamda yemek keyfi yapmak isteyenler için harika.",
         },
       ],
     },
     {
       day: 2,
-      startTime: '14:00',
-      endTime: '17:00',
+      startTime: "14:00",
+      endTime: "17:00",
       options: [
         {
-          text: 'Berlin Duvarı Anıtı ve East Side Gallery gezisi.',
-          description: 'Tarihi ve sanatı bir arada görmek isteyenler için unutulmaz bir deneyim.',
+          text: "Berlin Duvarı Anıtı ve East Side Gallery gezisi.",
+          description: "Tarihi ve sanatı bir arada görmek isteyenler için unutulmaz bir deneyim.",
         },
         {
-          text: 'Topography of Terror müzesi ve Nazizm tarihi turu.',
-          description: 'Berlin’in karanlık tarihini anlamak ve öğrenmek isteyenler için bilgilendirici bir seçenek.',
+          text: "Topography of Terror müzesi ve Nazizm tarihi turu.",
+          description:
+            "Berlin'in karanlık tarihini anlamak ve öğrenmek isteyenler için bilgilendirici bir seçenek.",
         },
         {
-          text: 'Gendarmenmarkt meydanında fotoğraf ve kısa yürüyüş.',
-          description: 'Mimari güzellikleri fotoğraflamak ve kısa bir yürüyüş yapmak isteyenler için ideal.',
+          text: "Gendarmenmarkt meydanında fotoğraf ve kısa yürüyüş.",
+          description:
+            "Mimari güzellikleri fotoğraflamak ve kısa bir yürüyüş yapmak isteyenler için ideal.",
         },
         {
-          text: 'Hackesche Höfe avlularında alışveriş ve sokak sanatı keşfi.',
-          description: 'Alışveriş yapmak ve modern Berlin kültürünü deneyimlemek isteyenler için eğlenceli bir seçenek.',
+          text: "Hackesche Höfe avlularında alışveriş ve sokak sanatı keşfi.",
+          description:
+            "Alışveriş yapmak ve modern Berlin kültürünü deneyimlemek isteyenler için eğlenceli bir seçenek.",
         },
       ],
     },
     {
       day: 2,
-      startTime: '17:00',
-      endTime: '19:00',
+      startTime: "17:00",
+      endTime: "19:00",
       options: [
         {
-          text: 'Otelde kısa bir dinlenme ve kahve.',
-          description: 'Günün yorgunluğunu atmak ve enerji toplamak isteyenler için ideal.',
+          text: "Otelde kısa bir dinlenme ve kahve.",
+          description: "Günün yorgunluğunu atmak ve enerji toplamak isteyenler için ideal.",
         },
         {
-          text: 'Tiergarten veya Tempelhofer Feld’de yürüyüş.',
-          description: 'Doğa ile iç içe sakin bir yürüyüş yapmak isteyenler için harika bir seçenek.',
+          text: "Tiergarten veya Tempelhofer Feld'de yürüyüş.",
+          description:
+            "Doğa ile iç içe sakin bir yürüyüş yapmak isteyenler için harika bir seçenek.",
         },
         {
-          text: 'Prenzlauer Berg veya Kreuzberg’de kafede atıştırma ve kahve keyfi.',
-          description: 'Şehir yaşamını gözlemlemek ve rahatlamak isteyenler için uygun.',
+          text: "Prenzlauer Berg veya Kreuzberg'de kafede atıştırma ve kahve keyfi.",
+          description: "Şehir yaşamını gözlemlemek ve rahatlamak isteyenler için uygun.",
         },
         {
-          text: 'Spree Nehri kıyısında yürüyüş ve fotoğraf çekimi.',
-          description: 'Manzara eşliğinde yürümek ve güzel fotoğraflar çekmek isteyenler için ideal.',
+          text: "Spree Nehri kıyısında yürüyüş ve fotoğraf çekimi.",
+          description:
+            "Manzara eşliğinde yürümek ve güzel fotoğraflar çekmek isteyenler için ideal.",
         },
       ],
     },
     {
       day: 2,
-      startTime: '19:00',
-      endTime: '22:00',
+      startTime: "19:00",
+      endTime: "22:00",
       options: [
         {
-          text: 'Markthalle Neun veya Kreuzberg’de Alman mutfağı akşam yemeği.',
-          description: 'Klasik Alman yemeklerini tatmak ve yerel lezzetleri deneyimlemek isteyenler için mükemmel.',
+          text: "Markthalle Neun veya Kreuzberg'de Alman mutfağı akşam yemeği.",
+          description:
+            "Klasik Alman yemeklerini tatmak ve yerel lezzetleri deneyimlemek isteyenler için mükemmel.",
         },
         {
-          text: 'Friedrichshain’da uluslararası mutfak veya tapas restoranları.',
-          description: 'Farklı mutfakları deneyimlemek ve sosyal bir ortamda akşam geçirmek isteyenler için ideal.',
+          text: "Friedrichshain'da uluslararası mutfak veya tapas restoranları.",
+          description:
+            "Farklı mutfakları deneyimlemek ve sosyal bir ortamda akşam geçirmek isteyenler için ideal.",
         },
         {
-          text: 'Berlin Lights veya açık hava gece turuna katılmak (yaklaşık 2 saat).',
-          description: 'Berlin’in gece ışıkları ve manzarasını görmek isteyenler için unutulmaz bir deneyim.',
+          text: "Berlin Lights veya açık hava gece turuna katılmak (yaklaşık 2 saat).",
+          description:
+            "Berlin'in gece ışıkları ve manzarasını görmek isteyenler için unutulmaz bir deneyim.",
         },
         {
-          text: 'Bar veya lounge’da canlı müzik ve kokteyl keyfi (ör: Klunkerkranich rooftop).',
-          description: 'Gece hayatını keşfetmek ve canlı müzik eşliğinde keyifli bir akşam geçirmek isteyenler için harika.',
+          text: "Bar veya lounge'da canlı müzik ve kokteyl keyfi (ör: Klunkerkranich rooftop).",
+          description:
+            "Gece hayatını keşfetmek ve canlı müzik eşliğinde keyifli bir akşam geçirmek isteyenler için harika.",
         },
       ],
     },
-  ]
+  ];
 
   // Simulate network latency
-  await new Promise((r) => setTimeout(r, 200))
-  return data
+  await new Promise((r) => setTimeout(r, 200));
+  return data;
 }
 
 // Mock: send selection to server
 export async function mockSubmitSelection(
   questionIndex: number,
   option: Option,
-  meta?: { day: number; startTime: string; endTime: string },
+  meta?: { day: number; startTime: string; endTime: string }
 ): Promise<void> {
   // Simulate network request
-  await new Promise((r) => setTimeout(r, 120))
+  await new Promise((r) => setTimeout(r, 120));
   // For demonstration, print the selected option
-  // eslint-disable-next-line no-console
   if (meta) {
     console.log(
       `[Question ${questionIndex + 1}] (Day ${meta.day} ${meta.startTime}-${meta.endTime}) Selected:`,
-      option.text,
-    )
+      option.text
+    );
   } else {
-    console.log(`[Question ${questionIndex + 1}] Selected:`, option.text)
+    console.log(`[Question ${questionIndex + 1}] Selected:`, option.text);
   }
 }
 
@@ -297,14 +200,11 @@ export async function mockSubmitSelection(
 export async function mockLogSelectionContents(
   questionIndex: number,
   option: Option,
-  meta?: { day: number; startTime: string; endTime: string },
+  meta?: { day: number; startTime: string; endTime: string }
 ): Promise<void> {
-
-  console.log('Selection contents:', {
+  console.log("Selection contents:", {
     question: questionIndex + 1,
     meta,
     option,
-  })
+  });
 }
-
-
