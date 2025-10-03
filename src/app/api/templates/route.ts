@@ -31,15 +31,25 @@ export async function GET(request: NextRequest) {
     if (sortBy === "popular") {
       filtered.sort((a, b) => b.likes - a.likes);
     } else if (sortBy === "recent") {
-      filtered.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      filtered.sort((a, b) => {
+        const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+        const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+        return dateB.getTime() - dateA.getTime();
+      });
     } else if (sortBy === "rating") {
       filtered.sort((a, b) => b.rating - a.rating);
     }
 
+    // Serialize dates to strings for JSON
+    const serializedTemplates = filtered.map((t) => ({
+      ...t,
+      createdAt: t.createdAt instanceof Date ? t.createdAt.toISOString() : t.createdAt,
+    }));
+
     return NextResponse.json({
       success: true,
-      data: filtered,
-      count: filtered.length,
+      data: serializedTemplates,
+      count: serializedTemplates.length,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

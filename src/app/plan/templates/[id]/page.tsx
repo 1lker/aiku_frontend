@@ -196,7 +196,7 @@ export default function TemplateDetailPage() {
                     )}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    {template.createdAt.toLocaleDateString()}
+                    {new Date(template.createdAt).toLocaleDateString()}
                   </div>
                 </div>
               </div>

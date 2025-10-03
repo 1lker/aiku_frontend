@@ -16,7 +16,7 @@ export const mockTemplates: TripTemplate[] = [
       avatar: "https://picsum.photos/id/64/100/100",
       isVerified: true,
     },
-    createdAt: new Date("2024-09-15"),
+    createdAt: new Date("2024-09-15T10:00:00Z"),
     activities: [],
     totalCost: "moderate",
     travelStyle: ["culture", "history", "art", "walking"],
@@ -45,7 +45,7 @@ export const mockTemplates: TripTemplate[] = [
       avatar: "https://picsum.photos/id/91/100/100",
       isVerified: true,
     },
-    createdAt: new Date("2024-10-01"),
+    createdAt: new Date("2024-10-01T10:00:00Z"),
     activities: [],
     totalCost: "moderate",
     travelStyle: ["food", "culture", "nightlife"],
@@ -74,7 +74,7 @@ export const mockTemplates: TripTemplate[] = [
       avatar: "https://picsum.photos/id/15/100/100",
       isVerified: false,
     },
-    createdAt: new Date("2024-09-28"),
+    createdAt: new Date("2024-09-28T10:00:00Z"),
     activities: [],
     totalCost: "premium",
     travelStyle: ["romance", "culture", "food", "relaxation"],
@@ -103,7 +103,7 @@ export const mockTemplates: TripTemplate[] = [
       avatar: "https://picsum.photos/id/203/100/100",
       isVerified: true,
     },
-    createdAt: new Date("2024-09-20"),
+    createdAt: new Date("2024-09-20T10:00:00Z"),
     activities: [],
     totalCost: "moderate",
     travelStyle: ["adventure", "beach", "culture", "nightlife"],
@@ -132,7 +132,7 @@ export const mockTemplates: TripTemplate[] = [
       avatar: "https://picsum.photos/id/22/100/100",
       isVerified: false,
     },
-    createdAt: new Date("2024-10-02"),
+    createdAt: new Date("2024-10-02T10:00:00Z"),
     activities: [],
     totalCost: "budget",
     travelStyle: ["culture", "budget", "cycling", "relaxation"],
@@ -161,7 +161,7 @@ export const mockTemplates: TripTemplate[] = [
       avatar: "https://picsum.photos/id/342/100/100",
       isVerified: true,
     },
-    createdAt: new Date("2024-09-25"),
+    createdAt: new Date("2024-09-25T10:00:00Z"),
     activities: [],
     totalCost: "premium",
     travelStyle: ["culture", "food", "technology", "tradition"],
@@ -190,7 +190,7 @@ export const mockTemplates: TripTemplate[] = [
       avatar: "https://picsum.photos/id/177/100/100",
       isVerified: false,
     },
-    createdAt: new Date("2024-09-18"),
+    createdAt: new Date("2024-09-18T10:00:00Z"),
     activities: [],
     totalCost: "moderate",
     travelStyle: ["family", "history", "food", "culture"],
@@ -219,7 +219,7 @@ export const mockTemplates: TripTemplate[] = [
       avatar: "https://picsum.photos/id/399/100/100",
       isVerified: true,
     },
-    createdAt: new Date("2024-09-30"),
+    createdAt: new Date("2024-09-30T10:00:00Z"),
     activities: [],
     totalCost: "budget",
     travelStyle: ["culture", "history", "food", "shopping"],
@@ -258,7 +258,11 @@ export async function fetchTemplates(filter?: {
   if (filter?.sortBy === "popular") {
     filtered.sort((a, b) => b.likes - a.likes);
   } else if (filter?.sortBy === "recent") {
-    filtered.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    filtered.sort((a, b) => {
+      const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+      const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+      return dateB.getTime() - dateA.getTime();
+    });
   } else if (filter?.sortBy === "rating") {
     filtered.sort((a, b) => b.rating - a.rating);
   }

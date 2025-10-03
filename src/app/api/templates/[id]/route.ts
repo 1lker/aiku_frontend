@@ -23,9 +23,16 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       );
     }
 
+    // Serialize dates to strings for JSON
+    const serializedTemplate = {
+      ...template,
+      createdAt:
+        template.createdAt instanceof Date ? template.createdAt.toISOString() : template.createdAt,
+    };
+
     return NextResponse.json({
       success: true,
-      data: template,
+      data: serializedTemplate,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

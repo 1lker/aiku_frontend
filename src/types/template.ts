@@ -28,7 +28,7 @@ export interface TripTemplate {
     avatar?: string;
     isVerified?: boolean;
   };
-  createdAt: Date;
+  createdAt: Date | string;
 
   // Trip details
   activities: TripActivity[];
@@ -61,6 +61,6 @@ export interface TemplateFilter {
 export interface UserTemplate {
   templateId: string;
   customizations?: Partial<TripTemplate>;
-  savedAt: Date;
+  savedAt: Date | string;
   notes?: string;
 }
