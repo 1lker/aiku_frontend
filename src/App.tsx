@@ -28,7 +28,7 @@ function App() {
               placeholder="e.g. I want to go from Istanbul to Berlin, I will stay for 4 days"
               aria-label="Trip planning prompt"
             />
-            <button className="prompt-button" type="submit">Plan</button>
+            <button className="prompt-button" type="submit">Plan Your Trip</button>
           </form>
         </div>
       </div>
